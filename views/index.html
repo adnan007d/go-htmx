@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://unpkg.com/htmx.org@1.9.5"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+
+    <style>
+      .my-indicator {
+        display: none;
+      }
+      .htmx-request .my-indicator {
+        display: inline-flex;
+      }
+      .htmx-request.my-indicator {
+        display: inline-flex;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="mx-auto w-max mt-5 max-w-3xl">
+      <form
+        hx-post="/api/todos"
+        hx-target="#todos"
+        hx-swap="beforeend"
+        hx-indicator="#ind"
+        hx-on::after-request=" if(event.detail.successful) this.reset()"
+      >
+        <input type="text" name="title" id="title" class="form-input" />
+        <button type="submit" class="text-white px-4 py-2 bg-blue-500">
+          Add Todo
+          <span
+            id="ind"
+            class="my-indicator animate-spin border-2 border-white border-t-transparent rounded-full w-3 h-3"
+          ></span>
+        </button>
+      </form>
+      <ul id="todos">
+        {{ range .Todos}} {{ template "todo" .}} {{ end }}
+      </ul>
+    </main>
+  </body>
+</html>
